@@ -28,10 +28,16 @@ jobs:
           cdk --version
 
       - name: Setup dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
       - name: Build
         run: sh deploy.sh
+
+      - name: Unit tests
+        if: contains(github.event_name, 'pull_request')
+        run: python -m pytest
           
       - name: CDK Diff Check
         if: contains(github.event_name, 'pull_request')
