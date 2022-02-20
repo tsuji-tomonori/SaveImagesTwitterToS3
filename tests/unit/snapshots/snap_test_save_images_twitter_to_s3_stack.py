@@ -94,6 +94,30 @@ snapshots['test_snapshot 1'] = {
             },
             'Type': 'AWS::IAM::Policy'
         },
+        'dynSaveImagesTwitterToS3cdkDD520877': {
+            'DeletionPolicy': 'Delete',
+            'Properties': {
+                'AttributeDefinitions': [
+                    {
+                        'AttributeName': 'partition_key',
+                        'AttributeType': 'S'
+                    }
+                ],
+                'KeySchema': [
+                    {
+                        'AttributeName': 'partition_key',
+                        'KeyType': 'HASH'
+                    }
+                ],
+                'ProvisionedThroughput': {
+                    'ReadCapacityUnits': 1,
+                    'WriteCapacityUnits': 1
+                },
+                'TableName': 'dyn_SaveImagesTwitterToS3_cdk'
+            },
+            'Type': 'AWS::DynamoDB::Table',
+            'UpdateReplacePolicy': 'Delete'
+        },
         'iamSaveImagesTwitterToS3cdk2A5C9215': {
             'Properties': {
                 'AssumeRolePolicyDocument': {
@@ -127,8 +151,85 @@ snapshots['test_snapshot 1'] = {
             },
             'Type': 'AWS::IAM::Role'
         },
+        'iamSaveImagesTwitterToS3cdkDefaultPolicy2CAC5940': {
+            'Properties': {
+                'PolicyDocument': {
+                    'Statement': [
+                        {
+                            'Action': [
+                                'dynamodb:BatchGetItem',
+                                'dynamodb:GetRecords',
+                                'dynamodb:GetShardIterator',
+                                'dynamodb:Query',
+                                'dynamodb:GetItem',
+                                'dynamodb:Scan',
+                                'dynamodb:ConditionCheckItem',
+                                'dynamodb:BatchWriteItem',
+                                'dynamodb:PutItem',
+                                'dynamodb:UpdateItem',
+                                'dynamodb:DeleteItem'
+                            ],
+                            'Effect': 'Allow',
+                            'Resource': [
+                                {
+                                    'Fn::GetAtt': [
+                                        'dynSaveImagesTwitterToS3cdkDD520877',
+                                        'Arn'
+                                    ]
+                                },
+                                {
+                                    'Ref': 'AWS::NoValue'
+                                }
+                            ]
+                        },
+                        {
+                            'Action': [
+                                's3:GetObject*',
+                                's3:GetBucket*',
+                                's3:List*',
+                                's3:DeleteObject*',
+                                's3:PutObject',
+                                's3:Abort*'
+                            ],
+                            'Effect': 'Allow',
+                            'Resource': [
+                                {
+                                    'Fn::GetAtt': [
+                                        's3ssaveimagestwittertos3cdkB0DA6082',
+                                        'Arn'
+                                    ]
+                                },
+                                {
+                                    'Fn::Join': [
+                                        '',
+                                        [
+                                            {
+                                                'Fn::GetAtt': [
+                                                    's3ssaveimagestwittertos3cdkB0DA6082',
+                                                    'Arn'
+                                                ]
+                                            },
+                                            '/*'
+                                        ]
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    'Version': '2012-10-17'
+                },
+                'PolicyName': 'iamSaveImagesTwitterToS3cdkDefaultPolicy2CAC5940',
+                'Roles': [
+                    {
+                        'Ref': 'iamSaveImagesTwitterToS3cdk2A5C9215'
+                    }
+                ]
+            },
+            'Type': 'AWS::IAM::Policy'
+        },
         'lmdSaveImagesTwitterToS3cdk7AEC5642': {
             'DependsOn': [
+                'iamSaveImagesTwitterToS3cdkDefaultPolicy2CAC5940',
                 'iamSaveImagesTwitterToS3cdk2A5C9215'
             ],
             'Properties': {
@@ -139,6 +240,16 @@ snapshots['test_snapshot 1'] = {
                     'S3Key': 'e801c6c811c868731e2ed6cbcd01db4776ce3a02be242d895805c032b76c694b.zip'
                 },
                 'Description': 'An application that periodically saves liked images to S3.',
+                'Environment': {
+                    'Variables': {
+                        'BUCKET_NAME': {
+                            'Ref': 's3ssaveimagestwittertos3cdkB0DA6082'
+                        },
+                        'DB_NAME': {
+                            'Ref': 'dynSaveImagesTwitterToS3cdkDD520877'
+                        }
+                    }
+                },
                 'FunctionName': 'lmd_SaveImagesTwitterToS3_cdk',
                 'Handler': 'lambda_function.handler',
                 'MemorySize': 512,
@@ -175,6 +286,14 @@ snapshots['test_snapshot 1'] = {
                 }
             },
             'Type': 'Custom::LogRetention'
+        },
+        's3ssaveimagestwittertos3cdkB0DA6082': {
+            'DeletionPolicy': 'Retain',
+            'Properties': {
+                'BucketName': 's3s-saveimagestwittertos3-cdk'
+            },
+            'Type': 'AWS::S3::Bucket',
+            'UpdateReplacePolicy': 'Retain'
         }
     },
     'Rules': {
