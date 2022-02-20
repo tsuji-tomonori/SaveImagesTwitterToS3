@@ -12,10 +12,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: '3.9.x'
+      
+      - name: Setup CDK
+        run: |
+          npm install -g aws-cdk
+          cdk --version
 
       - name: Setup dependencies
         run: pip install -r requirements.txt
