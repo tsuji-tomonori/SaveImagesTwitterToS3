@@ -3,7 +3,7 @@ name: SaveImagesTwitterToS3 CICD
 on:
   push:
     branches:
-        - master
+        - main
   pull_request:
 jobs:
   aws_cdk:
