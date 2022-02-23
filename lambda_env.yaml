@@ -1,0 +1,7 @@
+SaveImagesTwitterToS3:
+  # BUCKET_NAME, DB_NAME は CDK 側で定義
+  TWITTER_API_KEY: "twitter_api_key"
+  TWITTER_API_SECRET_KEY: "twitter_api_secret_key"
+  TWITTER_ACCESS_TOKEN: "twitter_access_token"
+  TWITTER_ACCESS_TOKEN_SECRET: "twitter_access_token_secret"
+  WRITE_HEADER: "write_header"

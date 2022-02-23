@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import aws_cdk as cdk
 from aws_cdk import (
@@ -10,10 +11,15 @@ from aws_cdk import (
     Stack,
 )
 from constructs import Construct
+import yaml
 
 
 PROJECT_NAME = "SaveImagesTwitterToS3"
 DESCRIPTION = "An application that periodically saves liked images to S3."
+
+with open(str(Path.cwd() / "lambda_env.yaml"), "r", encoding="utf-8") as f:
+    LAMBDA_ENV = yaml.safe_load(f)
+
 
 def build_resource_name(resource_name: str, service_name: str) -> str:
     """リソース名を組み立てる関数.
@@ -63,10 +69,10 @@ class SaveImagesTwitterToS3Stack(Stack):
             handler="lambda_function.handler",
             runtime=lambda_.Runtime.PYTHON_3_9,
             function_name=build_resource_name("lmd", PROJECT_NAME),
-            # environment=environment,
+            environment=LAMBDA_ENV[PROJECT_NAME],
             description=DESCRIPTION,
             timeout=cdk.Duration.seconds(300),
-            memory_size=512,
+            memory_size=2048,
             log_retention=logs.RetentionDays.THREE_MONTHS,
             role=lmd_role,
         )
