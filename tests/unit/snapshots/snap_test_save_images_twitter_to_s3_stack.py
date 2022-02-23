@@ -247,7 +247,12 @@ snapshots['test_snapshot 1'] = {
                         },
                         'DB_NAME': {
                             'Ref': 'dynSaveImagesTwitterToS3cdkDD520877'
-                        }
+                        },
+                        'TWITTER_ACCESS_TOKEN': 'twitter_access_token',
+                        'TWITTER_ACCESS_TOKEN_SECRET': 'twitter_access_token_secret',
+                        'TWITTER_API_KEY': 'twitter_api_key',
+                        'TWITTER_API_SECRET_KEY': 'twitter_api_secret_key',
+                        'WRITE_HEADER': 'write_header'
                     }
                 },
                 'FunctionName': 'lmd_SaveImagesTwitterToS3_cdk',
