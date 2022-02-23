@@ -102,7 +102,7 @@ class SaveImagesTwitterToS3Stack(Stack):
             build_resource_name_s3(PROJECT_NAME),
             bucket_name=build_resource_name_s3(PROJECT_NAME)
         )
-        bucket.grant_put(lmd_role)
+        bucket.grant_put_acl(lmd_role)
         lmd.add_environment(
             key="BUCKET_NAME",
             value=bucket.bucket_name,
