@@ -16,6 +16,7 @@ TWITTER_API_SECRET_KEY = os.environ["TWITTER_API_SECRET_KEY"]
 TWITTER_ACCESS_TOKEN = os.environ["TWITTER_ACCESS_TOKEN"]
 TWITTER_ACCESS_TOKEN_SECRET = os.environ["TWITTER_ACCESS_TOKEN_SECRET"]
 WRITE_HEADER = os.environ["WRITE_HEADER"]
+LOG_LEVEL = os.environ["LOG_LEVEL"]
 
 # Client initialization
 ssm_client = boto3.client("ssm")
@@ -25,7 +26,7 @@ table = dynamodb.Table(DB_NAME)
 
 # set logging
 logger = logging.getLogger()
-logger.setLevel(os.environ["LOG_LEVEL"])
+logger.setLevel(LOG_LEVEL)
 
 
 class ImgMaster(NamedTuple):
