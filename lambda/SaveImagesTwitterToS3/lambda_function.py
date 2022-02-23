@@ -1,7 +1,9 @@
 import datetime
+import json
+import logging
 import os
-from urllib.request import urlopen
 from typing import NamedTuple
+from urllib.request import urlopen
 
 import boto3
 import tweepy
@@ -20,6 +22,10 @@ ssm_client = boto3.client("ssm")
 s3_client = boto3.client("s3")
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(DB_NAME)
+
+# set logging
+logger = logging.getLogger()
+logger.setLevel(os.environ["LOG_LEVEL"])
 
 
 class ImgMaster(NamedTuple):
@@ -43,6 +49,7 @@ def tag_strf_query_paramater(tag: dict) -> str:
 
 
 def s3_upload(data: bin, key: str) -> str:
+    logger.info(f"s3 upload: {key}")
     res = s3_client.put_object(
         Body=data,
         Bucket=BUCKET_NAME,
@@ -69,10 +76,13 @@ def get_write_header() -> str:
             "partition_key": WRITE_HEADER
         }
     )
+    logger.info(
+        f"get write header: {json.dumps(res, indent=2, ensure_ascii=False)}")
     return res["Item"]["max_id"]
 
 
 def download_img(url: str) -> bin:
+    logger.info(f"download img: {url}")
     with urlopen(url) as twitter_img:
         return twitter_img.read()
 
@@ -174,6 +184,7 @@ def controller() -> None:
 
 
 def handler(event, context):
+    logger.info("Lambda Start!")
     try:
         controller()
         return 200
