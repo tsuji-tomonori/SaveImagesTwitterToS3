@@ -8,6 +8,7 @@ from aws_cdk import (
     aws_iam as iam,
     aws_dynamodb as dynamodb,
     aws_s3 as s3,
+    aws_ssm as ssm,
     Stack,
 )
 from constructs import Construct
@@ -106,3 +107,28 @@ class SaveImagesTwitterToS3Stack(Stack):
             key="BUCKET_NAME",
             value=bucket.bucket_name,
         )
+
+        ssm_twitter_api_key = ssm.StringParameter.from_secure_string_parameter_attributes(
+            self, "twitter_api_key",
+            version=1,
+            parameter_name="twitter_api_key",
+        )
+        ssm_twitter_api_key.grant_read(lmd_role)
+        ssm_twitter_api_secret_key = ssm.StringParameter.from_secure_string_parameter_attributes(
+            self, "twitter_api_secret_key",
+            version=1,
+            parameter_name="twitter_api_secret_key",
+        )
+        ssm_twitter_api_secret_key.grant_read(lmd_role)
+        ssm_twitter_access_token = ssm.StringParameter.from_secure_string_parameter_attributes(
+            self, "twitter_access_token",
+            version=1,
+            parameter_name="twitter_access_token",
+        )
+        ssm_twitter_access_token.grant_read(lmd_role)
+        ssm_twitter_access_token_secret = ssm.StringParameter.from_secure_string_parameter_attributes(
+            self, "twitter_access_token_secret",
+            version=1,
+            parameter_name="twitter_access_token_secret",
+        )
+        ssm_twitter_access_token_secret.grant_read(lmd_role)
