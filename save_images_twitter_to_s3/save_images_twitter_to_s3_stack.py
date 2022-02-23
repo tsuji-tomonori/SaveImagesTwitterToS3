@@ -15,6 +15,7 @@ from constructs import Construct
 PROJECT_NAME = "SaveImagesTwitterToS3"
 DESCRIPTION = "An application that periodically saves liked images to S3."
 
+
 def build_resource_name(resource_name: str, service_name: str) -> str:
     """リソース名を組み立てる関数.
 
@@ -66,7 +67,7 @@ class SaveImagesTwitterToS3Stack(Stack):
             # environment=environment,
             description=DESCRIPTION,
             timeout=cdk.Duration.seconds(300),
-            memory_size=512,
+            memory_size=2048,
             log_retention=logs.RetentionDays.THREE_MONTHS,
             role=lmd_role,
         )

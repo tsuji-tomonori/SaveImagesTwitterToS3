@@ -237,7 +237,7 @@ snapshots['test_snapshot 1'] = {
                     'S3Bucket': {
                         'Fn::Sub': 'cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}'
                     },
-                    'S3Key': 'e801c6c811c868731e2ed6cbcd01db4776ce3a02be242d895805c032b76c694b.zip'
+                    'S3Key': '9c11adf9d414fd3a2ccd07f440a2c221d3a8ee38ec15e06d8ad11be240f21cd9.zip'
                 },
                 'Description': 'An application that periodically saves liked images to S3.',
                 'Environment': {
@@ -252,7 +252,7 @@ snapshots['test_snapshot 1'] = {
                 },
                 'FunctionName': 'lmd_SaveImagesTwitterToS3_cdk',
                 'Handler': 'lambda_function.handler',
-                'MemorySize': 512,
+                'MemorySize': 2048,
                 'Role': {
                     'Fn::GetAtt': [
                         'iamSaveImagesTwitterToS3cdk2A5C9215',
