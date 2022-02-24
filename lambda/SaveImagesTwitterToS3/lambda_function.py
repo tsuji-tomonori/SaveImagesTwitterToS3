@@ -79,7 +79,7 @@ def get_write_header() -> str:
     )
     logger.info(
         f"get write header: {json.dumps(res, indent=2, ensure_ascii=False)}")
-    return res["Item"]["max_id"]
+    return res["Item"]["since_id"]
 
 
 def download_img(url: str) -> bin:
@@ -111,7 +111,7 @@ def s3_to_jst_isformat(time_str: str) -> str:
     return to_jst_isoformat(time_str, "%a, %d %b %Y %H:%M:%S GMT")
 
 
-def get_likes_from_twitter(max_id: str = None) -> list:
+def get_likes_from_twitter(since_id: str = None) -> list:
 
     consumer_key = get_value_from_ssm(TWITTER_API_KEY)
     consumer_secret = get_value_from_ssm(TWITTER_API_SECRET_KEY)
@@ -123,15 +123,15 @@ def get_likes_from_twitter(max_id: str = None) -> list:
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
 
-    if max_id:
-        return [like._json for like in api.get_favorites(max_id=max_id)]
+    if since_id:
+        return [like._json for like in api.get_favorites(since_id=since_id)]
     else:
         return [like._json for like in api.get_favorites()]
 
 
 def service() -> list:
-    max_id = get_write_header()
-    likes = get_likes_from_twitter(max_id)
+    since_id = get_write_header()
+    likes = get_likes_from_twitter(since_id)
     img_items = []
     for like in likes:
         if "extended_entities" not in like.keys():
@@ -180,7 +180,7 @@ def controller() -> None:
         put_db(img_info)
     put_db({
         "partition_key": WRITE_HEADER,
-        "max_id": img_masters[-1].id
+        "since_id": img_masters[-1].id
     })
 
 
