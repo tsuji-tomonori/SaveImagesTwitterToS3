@@ -180,7 +180,7 @@ def controller() -> None:
         put_db(img_info)
     put_db({
         "partition_key": WRITE_HEADER,
-        "max_id": img_masters[-1].current_key
+        "max_id": img_masters[-1].id
     })
 
 
